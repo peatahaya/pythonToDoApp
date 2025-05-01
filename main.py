@@ -84,3 +84,73 @@ class TodoApp:
             print(f"ID: {task['id']} | Name: {task['name']} | Priority: {task['priority']} | "
                   f"Status: {status} | Created: {task['created_at']}")
         print("-" * 50)
+
+def main():
+    """Run the to-do list application."""
+    app = TodoApp()
+    
+    while True:
+        print("\nTo-Do List Manager")
+        print("1. Add task")
+        print("2. Remove task")
+        print("3. Mark task as done")
+        print("4. Show all tasks")
+        print("5. Filter tasks by priority")
+        print("6. Filter tasks by status")
+        print("7. Exit")
+        
+        choice = input("Enter your choice (1-7): ")
+        
+        if choice == "1":
+            name = input("Enter task name: ")
+            priority = input("Enter priority (low/medium/high, default: medium): ") or "medium"
+            if priority.lower() not in ["low", "medium", "high"]:
+                print("Invalid priority. Using default (medium).")
+                priority = "medium"
+            app.add_task(name, priority)
+        
+        elif choice == "2":
+            app.display_tasks()
+            try:
+                task_id = int(input("Enter task ID to remove: "))
+                app.remove_task(task_id)
+            except ValueError:
+                print("Invalid ID. Please enter a number.")
+        
+        elif choice == "3":
+            app.display_tasks()
+            try:
+                task_id = int(input("Enter task ID to mark as done: "))
+                app.mark_done(task_id)
+            except ValueError:
+                print("Invalid ID. Please enter a number.")
+        
+        elif choice == "4":
+            app.display_tasks()
+        
+        elif choice == "5":
+            priority = input("Enter priority to filter (low/medium/high): ")
+            if priority.lower() in ["low", "medium", "high"]:
+                filtered = app.filter_tasks(priority=priority)
+                app.display_tasks(filtered)
+            else:
+                print("Invalid priority.")
+        
+        elif choice == "6":
+            status = input("Show done tasks? (yes/no): ").lower()
+            done = True if status == "yes" else False if status == "no" else None
+            if done is not None:
+                filtered = app.filter_tasks(done=done)
+                app.display_tasks(filtered)
+            else:
+                print("Invalid input. Use 'yes' or 'no'.")
+        
+        elif choice == "7":
+            print("Exiting To-Do List Manager. Goodbye!")
+            break
+        
+        else:
+            print("Invalid choice. Please select 1-7.")
+
+if __name__ == "__main__":
+    main()
